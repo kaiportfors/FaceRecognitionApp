@@ -37,9 +37,17 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
+      box: {},
     }
   }
 
+calculateFaceLocation = (data) => {
+ const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+ const image = document.getElementById('inputImage');
+ const width = Number(image.width);
+ const height = Number(image.height);
+ console.log(width, height);
+}
   onInputChange = (event) => {
    this.setState({input:event.target.value});
   }
@@ -50,14 +58,8 @@ class App extends Component {
     .predict(
       Clarifai.FACE_DETECT_MODEL,
       this.state.input)
-    .then(
-    function(response) {
-      console.log(response);
-    },
-    function(err) {
-      // there was an error
-    }
-  );
+    .then(response => this.calculateFaceLocation(response))
+    .catch(err => console.log(err));
   }
 
 
